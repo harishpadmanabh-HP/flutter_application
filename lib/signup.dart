@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:developer' as developer;
+
 
 
 void main() {
@@ -24,6 +26,20 @@ class SignupPage extends StatefulWidget {
 }
 
 class HomeState extends State<SignupPage> {
+  // Create a text controller and use it to retrieve the current value
+  // of the TextField.
+  final emailController = TextEditingController();
+  final pswdController = TextEditingController();
+
+  String email,password;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    emailController.dispose();
+    pswdController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -73,6 +89,8 @@ class HomeState extends State<SignupPage> {
             child: Column(
               children: <Widget>[
                 TextField(
+                  controller: emailController,//get text
+
                   decoration: InputDecoration(
                       labelText: "Email",
                       labelStyle: TextStyle(
@@ -84,6 +102,8 @@ class HomeState extends State<SignupPage> {
                 ),
                 SizedBox(height: 25.0),
                 TextField(
+                  controller: pswdController,
+
                   decoration: InputDecoration(
                     labelText: "Password",
                     labelStyle: TextStyle(
@@ -95,17 +115,22 @@ class HomeState extends State<SignupPage> {
                   ),
                   obscureText: true,
                 ),
-                SizedBox(height: 15.0),
+                SizedBox(height: 30.0),
 
                 Container(
-                  height: 40.0,
+                  height: 60.0,
                   child: Material(
                     borderRadius: BorderRadius.circular(20.0),
                     shadowColor: Colors.grey,
                     color: Colors.green,
                     elevation: 10.0,
                     child: GestureDetector(
-                      onTap: () =>showAboutDialog(context: context),
+                      onTap: () {
+                        email=emailController.text;
+                        password=pswdController.text;
+                        developer.log('log me', name: email+password);
+                        _showToast(context, email,password);
+                      },
                       child: Center(
                         child: Text(
                           "REGISTER",
@@ -129,13 +154,15 @@ class HomeState extends State<SignupPage> {
       ),
     );
   }
-  void _showToast(BuildContext context) {
+  void _showToast(BuildContext context,String email,String password) {
+    print(email+"\n"+password);
     Fluttertoast.showToast(
-        msg: "This is Center Short Toast",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
+
+        msg: (email+"\n"+password),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.green,
         textColor: Colors.white,
         fontSize: 16.0
     );
